@@ -1,36 +1,43 @@
 ﻿using System;
 using Gtk;
+using GtkTestProject.Api;
+using Mono.Data.Sqlite;
 
 namespace GtkTestProject
 {
 	public class SqliteConnectionLoader : IConnectionLoader
 	{
-		public SqliteConnectionLoader ()
+		private bool openNew;
+		public SqliteConnectionLoader (bool openNew)
 		{
+			this.openNew = openNew;
 		}
 
 		#region IConnectionLoader implementation
 
 		public GtkTestProject.Api.IDbServerConnection getConnection (Window parentWindow)
 		{
-			FileChooserDialog chooseSqliteDbChooserDialog = null;
+			
+			FileChooserDialog chooseFileDialog = new FileChooserDialog (
+				                                     openNew ? "New SQLite database" : "Open existing SQLite database", 
+				                                     parentWindow, 
+				                                     openNew ? FileChooserAction.Save : FileChooserAction.Open,
+				                                     "Cancel", ResponseType.Cancel,
+				                                     openNew ? "Create" : "Open", ResponseType.Accept
+			                                     );
 			try {
-				chooseSqliteDbChooserDialog = new FileChooserDialog (
-					"Open Sqlite database", 
-					parentWindow, 
-					FileChooserAction.Open, 
-					"Cancel", ResponseType.Cancel,
-					"Open", ResponseType.Accept
-				);
-				if (chooseSqliteDbChooserDialog.Run () == (int)ResponseType.Accept) {
-					return new SqliteDbServerConnection (chooseSqliteDbChooserDialog.Filename, String.Format ("Data Source={0}; user=sa", "dbfile.db"));
-				} else {
-					return null; 
-				}
+				if (chooseFileDialog.Run () != (int)ResponseType.Accept)
+					return null;
+
+				SqliteConnectionStringBuilder conStrBuilder = new SqliteConnectionStringBuilder ();
+				conStrBuilder.DataSource = chooseFileDialog.Filename;
+				conStrBuilder.FailIfMissing = !openNew; 
+
+				return new SqliteDbServerConnection (chooseFileDialog.Filename, conStrBuilder.ConnectionString);
 			} finally {
-				if (chooseSqliteDbChooserDialog != null)
-					chooseSqliteDbChooserDialog.Destroy ();
+				chooseFileDialog.Destroy ();
 			}
+
 
 		}
 

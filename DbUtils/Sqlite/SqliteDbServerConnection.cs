@@ -2,6 +2,12 @@
 using GtkTestProject.Api;
 using GtkTestProject.Sqlite;
 using System.IO;
+using Mono.Data.Sqlite;
+using Gtk3TestProject;
+using System.Data;
+using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace GtkTestProject
 {
@@ -10,12 +16,17 @@ namespace GtkTestProject
 
 		private string sqliteConnectionString;
 		private string sqliteFileName;
+		private SqliteConnection con;
+
 
 		public SqliteDbServerConnection (string sqliteDatabaseFileName, String connectionString)
 		{
 //			sqliteConnectionString = string.Format ("Data Source={0};user=sa", sqliteDatabaseFileName);
 			sqliteConnectionString = connectionString;
 			sqliteFileName = sqliteDatabaseFileName;
+
+			con = new SqliteConnection (sqliteConnectionString);
+			con.Open ();
 		}
 
 		#region IDbServerConnection implementation
@@ -25,8 +36,13 @@ namespace GtkTestProject
 			if (parentFeature == null) {
 				// root
 				return new SqliteFeature[] {
-					new SqliteFeature ("filename", sqliteFileName)
+					new SqliteFeature ("filename", sqliteFileName, String.Format ("Resources{0}Icons{0}database.png", Path.DirectorySeparatorChar))
 				};
+			} else if (((SqliteFeature)parentFeature).Key == "tables") {
+				return loadTables ();
+
+			} else if (((SqliteFeature)parentFeature).Key == "table") {
+				return loadColumns (((SqliteFeature)parentFeature).Text);
 			} else if (((SqliteFeature)parentFeature).Key == "filename") {
 				return new SqliteFeature[] {
 					new SqliteFeature ("tables", "Tables"),
@@ -39,6 +55,45 @@ namespace GtkTestProject
 		}
 
 		#endregion
+
+		private SqliteTableFeature[] loadTables() {
+
+			List<string> tables = new List<string> ();
+
+			using (IDbCommand command = con.CreateCommand ()) {
+				command.CommandText = "select  name from sqlite_master where type = 'table'";
+
+				using (IDataReader reader = command.ExecuteReader ()) {
+					while (reader.Read ()) {
+						tables.Add( reader.GetString (0) );
+					}
+				}
+			}
+				
+			var res = tables.Select (t => new SqliteTableFeature ("table", t));
+			return res.ToArray ();
+		}
+
+		private SqliteColumnFeature[] loadColumns(String table) {
+			List<SqliteColumnFeature> columns = new List<SqliteColumnFeature> ();
+
+			using (IDbCommand command = con.CreateCommand ()) {
+				command.CommandText = "PRAGMA table_info(TestTable)";
+				using (IDataReader reader = command.ExecuteReader ()) {
+					while (reader.Read ()) {
+						string name = reader.GetString (reader.GetOrdinal ("name"));
+						string type = reader.GetString (reader.GetOrdinal ("type"));
+						bool notNull = reader.GetBoolean (reader.GetOrdinal ("notnull"));
+						bool primaryKey = reader.GetBoolean (reader.GetOrdinal ("pk"));
+
+						String text = string.Format ("{0} ({1} {2}, {3})",
+							              name, primaryKey ? "PK, " : "", type, notNull ? "not null" : "");
+						columns.Add(new SqliteColumnFeature("column", text, primaryKey));
+					}
+				}
+			}
+			return columns.ToArray ();
+		}
 	}
 }
 

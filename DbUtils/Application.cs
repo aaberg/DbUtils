@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 
 namespace Gtk3TestApp
 {
@@ -7,10 +8,13 @@ namespace Gtk3TestApp
 		public Application ()
 		{
 			MainWindow w = new MainWindow ();
-			w.SetSizeRequest (800, 600);
+			w.SetSizeRequest (1024, 700);
+//			w.Maximize ();
 		}
 
 		public static void Main(){
+			
+
 			Gtk.Application.Init();
 			new Application ();
 			Gtk.Application.Run ();

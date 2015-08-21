@@ -2,6 +2,8 @@
 using Gtk;
 using GtkTestProject;
 using GtkTestProject.Api;
+using System.IO;
+using Gtk3TestProject;
 
 namespace Gtk3TestApp
 {
@@ -20,19 +22,25 @@ namespace Gtk3TestApp
 		}
 
 		private void InitObjectBrowser() {
+
 			TreeViewColumn obCol = new TreeViewColumn ();
 			obCol.Title = "Object browser";
 
+			CellRendererPixbuf iconRendere = new CellRendererPixbuf ();
 			CellRendererText textRendere = new CellRendererText ();
-			obCol.PackStart (textRendere, true);
+
+			obCol.PackStart (iconRendere, false);
+			obCol.AddAttribute (iconRendere, "pixbuf", 0);
+			obCol.PackStart (textRendere, true);		
+			obCol.AddAttribute (textRendere, "text", 1);
 
 			objectBrowserTreeView.AppendColumn (obCol);
 
-			obCol.AddAttribute (textRendere, "Text", 0);
+
 		}
 
 		protected void OnNewConnection (object sender, EventArgs e) {
-			var conncetion = new SqliteConnectionLoader ().getConnection (this);
+			var conncetion = new SqliteConnectionLoader (false).getConnection (this);
 			if (conncetion == null)
 				return;
 
@@ -49,17 +57,38 @@ namespace Gtk3TestApp
 
 			foreach (IFeature feature in features) {
 				TreeIter iter;
+				Gdk.Pixbuf icon = string.IsNullOrEmpty( feature.Icon ) ? new Gdk.Pixbuf(string.Format("Resources{0}Icons{0}folder.png", System.IO.Path.DirectorySeparatorChar)) : new Gdk.Pixbuf (feature.Icon);
+				icon.Save ("/home/lars/temp/test.png", "png");
 				if (parentIter.HasValue) {
 					Console.WriteLine (feature.Text);
-					iter = objectBrowserTreeStore.AppendValues (parentIter.Value, feature);
+					iter = objectBrowserTreeStore.AppendValues (parentIter.Value, icon, feature.Text);
 				} else {
-					iter = objectBrowserTreeStore.AppendValues (feature);
+					iter = objectBrowserTreeStore.AppendValues (icon, feature.Text);
 				}
 				loadConnectionRecursive (con, iter, feature);
 			}
-
 		}
 
+		protected void OnOpenSqliteDb(object sender, EventArgs e) {
+			SqliteConnectionLoader loader = new SqliteConnectionLoader (false);
+			IDbServerConnection connection = loader.getConnection (this);
+			if (connection != null)
+				loadConnection (connection);
+		}
+
+		protected void OnNewSqliteDb(object sende, EventArgs e) {
+			SqliteConnectionLoader loader = new SqliteConnectionLoader (true);
+			IDbServerConnection connection = loader.getConnection (this);
+			if (connection != null)
+				loadConnection (connection);
+		}
+
+		protected void OnNewSqlTab(object sender, EventArgs e) {
+			SqlEditor sqlEditor = new SqlEditor ();
+			tabbedArea.Add (sqlEditor);
+			tabbedArea.SetTabLabelText (sqlEditor, "Sql editor");
+			tabbedArea.ShowAll ();
+		}
 
 
 		#region UI stuff
@@ -78,9 +107,15 @@ namespace Gtk3TestApp
 		protected Gtk.MenuItem file;
 		protected Gtk.Menu fileMenu;
 		protected Gtk.MenuItem openMenuItem;
+		protected Gtk.MenuItem newSqlEditorMenuItem;
 		protected Gtk.MenuItem exitMenuItem;
 		protected Gtk.MenuItem edit;
 		protected Gtk.Menu editMenu;
+		protected Gtk.MenuItem database;
+		protected Gtk.Menu databaseMenu;
+		protected Gtk.MenuItem newSqliteDbMenuItem;
+		protected Gtk.MenuItem openSqliteDbMenuItem;
+		protected Gtk.Notebook tabbedArea;
 
 
 		private void Build(){
@@ -111,9 +146,14 @@ namespace Gtk3TestApp
 			openMenuItem.Activated += OnNewConnection;
 			fileMenu.Append (openMenuItem);
 
+			newSqlEditorMenuItem = new MenuItem ("New Sql Editor Tab");
+			newSqlEditorMenuItem.Activated += OnNewSqlTab;
+			fileMenu.Append (newSqlEditorMenuItem);
+
 			exitMenuItem = new MenuItem ("Exit");
 			exitMenuItem.Activated += OnExit;
 			fileMenu.Append (exitMenuItem);
+
 			mainMenu.Append (file);
 
 			// setup edit menu
@@ -122,12 +162,23 @@ namespace Gtk3TestApp
 			edit.Submenu = editMenu;
 
 			mainMenu.Append (edit);
+
+			// setup database menu
+			database = new MenuItem("Database");
+			databaseMenu = new Menu ();
+			database.Submenu = databaseMenu;
 		
+			newSqliteDbMenuItem = new MenuItem ("New Sqlite DB");
+			newSqliteDbMenuItem.Activated += OnNewSqliteDb;
+			databaseMenu.Append (newSqliteDbMenuItem);
+			openSqliteDbMenuItem = new MenuItem ("Open Sqlite DB");
+			openSqliteDbMenuItem.Activated += OnOpenSqliteDb;
+			databaseMenu.Append (openSqliteDbMenuItem);
+			mainMenu.Append (database);
 
 
 			// left paned
 			leftPaned = new Gtk.HPaned();
-			leftPaned.Position = 300;
 			leftPaned.CanFocus = true;
 			mainVbox.Add (leftPaned);
 			var objectBrowserScrolledWindow = new Gtk.ScrolledWindow ();
@@ -137,12 +188,12 @@ namespace Gtk3TestApp
 			objectBrowserTreeView = new TreeView ();
 			objectBrowserScrolledWindow.Add (objectBrowserTreeView);
 
-			objectBrowserTreeStore = new TreeStore (typeof(string));
+			objectBrowserTreeStore = new TreeStore (typeof(Gdk.Pixbuf), typeof(string));
 			objectBrowserTreeView.Model = objectBrowserTreeStore;
 
-			dummyButton = new Gtk.Button ("Dummy");
-			leftPaned.Add2 (dummyButton);
-
+			// main tabbed area
+			tabbedArea = new Notebook();
+			leftPaned.Add2 (tabbedArea);
 
 			// status bar
 			statusBar = new Statusbar();
@@ -152,7 +203,9 @@ namespace Gtk3TestApp
 			statusBarBox.Expand = false;
 			statusBarBox.Fill = false;
 
-			this.ShowAll ();
+			this.ShowAll (	);
+
+			leftPaned.Position = 400;
 
 			this.DeleteEvent += OnExit;
 		}
