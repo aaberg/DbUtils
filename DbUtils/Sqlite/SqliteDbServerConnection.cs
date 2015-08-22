@@ -15,14 +15,13 @@ namespace GtkTestProject
 	{
 
 		private string sqliteConnectionString;
-		private string sqliteFileName;
 		private SqliteConnection con;
 
 
 		public SqliteDbServerConnection (string sqliteDatabaseFileName, String connectionString)
 		{
 			sqliteConnectionString = connectionString;
-			sqliteFileName = sqliteDatabaseFileName;
+			this.Name = new FileInfo (sqliteDatabaseFileName).Name;
 
 			con = new SqliteConnection (sqliteConnectionString);
 			con.Open ();
@@ -30,13 +29,17 @@ namespace GtkTestProject
 
 		#region IDbServerConnection implementation
 
+		public string Name {
+			get;
+			private set;
+		}
+
 		public IFeature[] GetFeatures (IFeature parentFeature)
 		{
 			if (parentFeature == null) {
 				// root
-				FileInfo dbFile = new FileInfo(sqliteFileName);
 				return new SqliteFeature[] {
-					new SqliteFeature ("filename", dbFile.Name, String.Format ("Resources{0}Icons{0}database.png", Path.DirectorySeparatorChar))
+					new SqliteFeature ("filename", this.Name, String.Format ("Resources{0}Icons{0}database.png", Path.DirectorySeparatorChar))
 				};
 			} else if (((SqliteFeature)parentFeature).Key == "tables") {
 				return loadTables ();

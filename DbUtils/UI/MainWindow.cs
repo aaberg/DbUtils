@@ -4,6 +4,7 @@ using GtkTestProject;
 using GtkTestProject.Api;
 using System.IO;
 using Gtk3TestProject;
+using System.Collections.Generic;
 
 namespace Gtk3TestApp
 {
@@ -16,7 +17,7 @@ namespace Gtk3TestApp
 
 			InitObjectBrowser ();
 		}
-
+			
 		protected void OnExit(object sender, EventArgs e) {
 			Gtk.Application.Quit ();
 		}
@@ -50,6 +51,7 @@ namespace Gtk3TestApp
 
 		private void loadConnection(IDbServerConnection con) {
 			loadConnectionRecursive (con, new Nullable<TreeIter>(), (IFeature)null);
+			Gtk3TestApp.Application.Connections.Add (con);
 		}
 
 		private void loadConnectionRecursive(IDbServerConnection con, Nullable<TreeIter> parentIter, IFeature parentFeature) {
@@ -86,7 +88,7 @@ namespace Gtk3TestApp
 		}
 
 		protected void OnNewSqlTab(object sender, EventArgs e) {
-			SqlEditor sqlEditor = new SqlEditor ();
+			SqlEditor sqlEditor = new SqlEditor (Gtk3TestApp.Application.Connections[0]);
 			tabbedArea.Add (sqlEditor);
 			tabbedArea.SetTabLabelText (sqlEditor, "Sql editor");
 			tabbedArea.ShowAll ();

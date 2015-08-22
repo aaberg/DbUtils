@@ -1,5 +1,7 @@
 ﻿using System;
 using System.IO;
+using GtkTestProject.Api;
+using System.Collections.Generic;
 
 namespace Gtk3TestApp
 {
@@ -19,6 +21,17 @@ namespace Gtk3TestApp
 			new Application ();
 			Gtk.Application.Run ();
 		}
+
+		#region static stuff
+
+		private static List<IDbServerConnection> _connections = new List<IDbServerConnection>();
+		public static List<IDbServerConnection> Connections {
+			get{
+				return _connections;
+			}
+		}
+
+		#endregion
 	}
 }
 
