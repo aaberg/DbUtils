@@ -35,14 +35,19 @@ namespace GtkTestProject
 		{
 			if (parentFeature == null) {
 				// root
+				FileInfo dbFile = new FileInfo(sqliteFileName);
 				return new SqliteFeature[] {
-					new SqliteFeature ("filename", sqliteFileName, String.Format ("Resources{0}Icons{0}database.png", Path.DirectorySeparatorChar))
+					new SqliteFeature ("filename", dbFile.Name, String.Format ("Resources{0}Icons{0}database.png", Path.DirectorySeparatorChar))
 				};
 			} else if (((SqliteFeature)parentFeature).Key == "tables") {
 				return loadTables ();
 
 			} else if (((SqliteFeature)parentFeature).Key == "table") {
-				return loadColumns (((SqliteFeature)parentFeature).Text);
+				return new IFeature[] { 
+					new SqliteColumnsFolderFeature (((SqliteTableFeature)parentFeature).Text)
+				};
+			} else if (((SqliteFeature)parentFeature).Key == "columns") {
+				return loadColumns (((SqliteColumnsFolderFeature)parentFeature).TableName);
 			} else if (((SqliteFeature)parentFeature).Key == "filename") {
 				return new SqliteFeature[] {
 					new SqliteFeature ("tables", "Tables"),
@@ -78,7 +83,7 @@ namespace GtkTestProject
 			List<SqliteColumnFeature> columns = new List<SqliteColumnFeature> ();
 
 			using (IDbCommand command = con.CreateCommand ()) {
-				command.CommandText = "PRAGMA table_info(TestTable)";
+				command.CommandText = "PRAGMA table_info(" + table + ")";
 				using (IDataReader reader = command.ExecuteReader ()) {
 					while (reader.Read ()) {
 						string name = reader.GetString (reader.GetOrdinal ("name"));
