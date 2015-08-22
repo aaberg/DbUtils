@@ -67,6 +67,8 @@ namespace Gtk3TestApp
 				}
 				loadConnectionRecursive (con, iter, feature);
 			}
+
+			objectBrowserTreeView.ExpandRow (new TreePath ("0"), false);
 		}
 
 		protected void OnOpenSqliteDb(object sender, EventArgs e) {

@@ -21,7 +21,6 @@ namespace GtkTestProject
 
 		public SqliteDbServerConnection (string sqliteDatabaseFileName, String connectionString)
 		{
-//			sqliteConnectionString = string.Format ("Data Source={0};user=sa", sqliteDatabaseFileName);
 			sqliteConnectionString = connectionString;
 			sqliteFileName = sqliteDatabaseFileName;
 
