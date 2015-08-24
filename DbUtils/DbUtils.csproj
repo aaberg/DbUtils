@@ -5,7 +5,7 @@
     <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
     <ProjectGuid>{F5DDBEA8-05CB-407A-9006-D3F9F7531CAB}</ProjectGuid>
     <OutputType>Exe</OutputType>
-    <RootNamespace>Gtk3TestProject</RootNamespace>
+    <RootNamespace>DbUtils</RootNamespace>
     <AssemblyName>Gtk3TestProject</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
   </PropertyGroup>
@@ -46,6 +46,7 @@
     </Compile>
     <Compile Include="UI\SqlEditor.cs" />
     <Compile Include="Sqlite\SqliteColumnsFolderFeature.cs" />
+    <Compile Include="Internal\State\IStateProvider.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="gtk-sharp, Version=3.0.0.0, Culture=neutral, PublicKeyToken=35e10195dab3c99f">
@@ -75,6 +76,8 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Resources\" />
+    <Folder Include="Internal\" />
+    <Folder Include="Internal\State\" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\Icons\database.png">
