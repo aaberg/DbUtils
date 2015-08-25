@@ -2,8 +2,10 @@
 using System.IO;
 using GtkTestProject.Api;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using DbUtils.UI;
 
-namespace Gtk3TestApp
+namespace DbUtils
 {
 	public class Application
 	{
@@ -15,23 +17,13 @@ namespace Gtk3TestApp
 		}
 
 		public static void Main(){
-			
+		
+			new ApplicationState ();
 
 			Gtk.Application.Init();
 			new Application ();
 			Gtk.Application.Run ();
 		}
-
-		#region static stuff
-
-		private static List<IDbServerConnection> _connections = new List<IDbServerConnection>();
-		public static List<IDbServerConnection> Connections {
-			get{
-				return _connections;
-			}
-		}
-
-		#endregion
 	}
 }
 

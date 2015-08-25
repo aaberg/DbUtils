@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Gtk3TestProject
+namespace DbUtils
 {
 	public interface IStateProvider
 	{

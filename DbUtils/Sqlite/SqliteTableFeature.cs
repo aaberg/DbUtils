@@ -3,7 +3,7 @@ using GtkTestProject.Sqlite;
 using GtkTestProject.Api;
 using System.IO;
 
-namespace Gtk3TestProject
+namespace DbUtils
 {
 	public class SqliteTableFeature : SqliteFeature
 	{

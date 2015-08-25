@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Data;
 
 namespace GtkTestProject.Api
 {
@@ -7,6 +8,8 @@ namespace GtkTestProject.Api
 		IFeature[] GetFeatures (IFeature parentFeature);
 
 		String Name {get;}
+
+		IDbConnection CreateConnection();
 	}
 }
 

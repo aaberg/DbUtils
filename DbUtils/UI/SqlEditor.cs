@@ -1,10 +1,12 @@
 ﻿using System;
 using Gtk;
 using GtkTestProject.Api;
-using Gtk3TestApp;
+using DbUtils;
 using System.Linq;
+using System.Data;
+using Mono.Data.Sqlite;
 
-namespace Gtk3TestProject
+namespace DbUtils.UI
 {
 	public class SqlEditor : Gtk.VBox
 	{
@@ -18,10 +20,46 @@ namespace Gtk3TestProject
 			get;
 			private set;
 		}
+
+		private IDbConnection _con = null;
+		protected IDbConnection Connection {
+			get {
+				if (_con == null) {
+					_con = this.ServerConnection.CreateConnection ();
+				}
+				return _con;
+			}
+		}
+
+
+		protected void ExecuteCommand(){
+			if (Connection.State == ConnectionState.Closed) {
+				Connection.Open ();
+			}
+
+			String command;
+			if (this.sqlArea.Buffer.HasSelection) {
+				command = "";
+			} else {
+				command = this.sqlArea.Buffer.Text;
+			}
+
+			using (IDbCommand cmd = Connection.CreateCommand ()) {
+				cmd.CommandText = command;
+				using (IDataReader reader = cmd.ExecuteReader ()) {
+					while (reader.Read ()) {
+						
+					}
+				}
+			}
+		}
+
+
+		# region UI stuff
+		 
 			
 		protected Gtk.VPaned vpaned;
 		protected Gtk.Toolbar toolbar;
-		protected Gtk.ComboBox currentDatabaseDropDown;
 		protected Gtk.TextView sqlArea;
 		protected Gtk.Notebook resultNoteBook;
 		protected Gtk.TreeView sqlResult;
@@ -38,20 +76,15 @@ namespace Gtk3TestProject
 			toolbarBox.Position = 0;
 
 			// toolbar choose database dropdown
-			Gtk.Label l = new Gtk.Label("Current database");
+			Gtk.Label l = new Gtk.Label(string.Format("Current database: {0}", this.ServerConnection.Name));
 			ToolItem lTi = new ToolItem ();
 			lTi.Add (l);
 			toolbar.Insert (lTi, 0);
 
-			currentDatabaseDropDown = new ComboBox (Gtk3TestApp.Application.Connections.Select(c => c.Name).ToArray());
-			currentDatabaseDropDown.WidthRequest = 120;
-			ToolItem dropdownWrapper = new ToolItem ();
-			dropdownWrapper.Add (currentDatabaseDropDown);
-			toolbar.Insert (dropdownWrapper, 1);
-
 			// toolbar exec button
 			ToolButton execBtn = new ToolButton (Gtk.Stock.MediaPlay);
-			toolbar.Insert (execBtn, 2);
+			execBtn.Clicked += (sender, e) => this.ExecuteCommand();
+			toolbar.Insert (execBtn, 1);
 
 			// vpaned
 			vpaned = new VPaned();
@@ -73,6 +106,8 @@ namespace Gtk3TestProject
 
 			vpaned.Position = 300;
 		}
+
+		#endregion
 	}
 }
 

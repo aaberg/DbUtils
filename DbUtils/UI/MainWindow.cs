@@ -3,10 +3,10 @@ using Gtk;
 using GtkTestProject;
 using GtkTestProject.Api;
 using System.IO;
-using Gtk3TestProject;
+using DbUtils;
 using System.Collections.Generic;
 
-namespace Gtk3TestApp
+namespace DbUtils.UI
 {
 	public class MainWindow : Gtk.Window
 	{
@@ -51,7 +51,8 @@ namespace Gtk3TestApp
 
 		private void loadConnection(IDbServerConnection con) {
 			loadConnectionRecursive (con, new Nullable<TreeIter>(), (IFeature)null);
-			Gtk3TestApp.Application.Connections.Add (con);
+			ApplicationState.Instance.Connections.Add (con);
+			ApplicationState.Instance.CurrentConnection = con;
 		}
 
 		private void loadConnectionRecursive(IDbServerConnection con, Nullable<TreeIter> parentIter, IFeature parentFeature) {
@@ -88,7 +89,7 @@ namespace Gtk3TestApp
 		}
 
 		protected void OnNewSqlTab(object sender, EventArgs e) {
-			SqlEditor sqlEditor = new SqlEditor (Gtk3TestApp.Application.Connections[0]);
+			SqlEditor sqlEditor = new SqlEditor (ApplicationState.Instance.Connections[0]);
 			tabbedArea.Add (sqlEditor);
 			tabbedArea.SetTabLabelText (sqlEditor, "Sql editor");
 			tabbedArea.ShowAll ();
@@ -107,18 +108,9 @@ namespace Gtk3TestApp
 
 
 		// menu
-		protected Gtk.MenuBar mainMenu;
-		protected Gtk.MenuItem file;
-		protected Gtk.Menu fileMenu;
-		protected Gtk.MenuItem openMenuItem;
-		protected Gtk.MenuItem newSqlEditorMenuItem;
-		protected Gtk.MenuItem exitMenuItem;
-		protected Gtk.MenuItem edit;
-		protected Gtk.Menu editMenu;
-		protected Gtk.MenuItem database;
-		protected Gtk.Menu databaseMenu;
-		protected Gtk.MenuItem newSqliteDbMenuItem;
-		protected Gtk.MenuItem openSqliteDbMenuItem;
+		protected MainMenu mainMenu;
+
+
 		protected Gtk.Notebook tabbedArea;
 
 
@@ -131,7 +123,8 @@ namespace Gtk3TestApp
 
 			this.Add (mainVbox);
 
-			mainMenu = new Gtk.MenuBar ();
+			// Main menu
+			mainMenu = new MainMenu ();
 
 			mainVbox.Add (mainMenu);
 
@@ -141,44 +134,10 @@ namespace Gtk3TestApp
 			mainMenuBox.Expand = false;
 			mainMenuBox.Fill = false;
 
-			// setup file menu
-			file = new MenuItem("File");
-			fileMenu = new Menu();
-			file.Submenu = fileMenu;
-
-			openMenuItem = new MenuItem ("Open Sqlite database");
-			openMenuItem.Activated += OnNewConnection;
-			fileMenu.Append (openMenuItem);
-
-			newSqlEditorMenuItem = new MenuItem ("New Sql Editor Tab");
-			newSqlEditorMenuItem.Activated += OnNewSqlTab;
-			fileMenu.Append (newSqlEditorMenuItem);
-
-			exitMenuItem = new MenuItem ("Exit");
-			exitMenuItem.Activated += OnExit;
-			fileMenu.Append (exitMenuItem);
-
-			mainMenu.Append (file);
-
-			// setup edit menu
-			edit = new MenuItem("Edit");
-			editMenu = new Menu ();
-			edit.Submenu = editMenu;
-
-			mainMenu.Append (edit);
-
-			// setup database menu
-			database = new MenuItem("Database");
-			databaseMenu = new Menu ();
-			database.Submenu = databaseMenu;
-		
-			newSqliteDbMenuItem = new MenuItem ("New Sqlite DB");
-			newSqliteDbMenuItem.Activated += OnNewSqliteDb;
-			databaseMenu.Append (newSqliteDbMenuItem);
-			openSqliteDbMenuItem = new MenuItem ("Open Sqlite DB");
-			openSqliteDbMenuItem.Activated += OnOpenSqliteDb;
-			databaseMenu.Append (openSqliteDbMenuItem);
-			mainMenu.Append (database);
+			mainMenu.NewSqliteDbActivated += OnNewSqliteDb;
+			mainMenu.OpenSqliteDbActivated += OnOpenSqliteDb;
+			mainMenu.ExitActivated += OnExit;
+			mainMenu.NewSqlEditorWindowActivated += OnNewSqlTab;
 
 
 			// left paned

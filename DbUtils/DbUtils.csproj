@@ -47,6 +47,9 @@
     <Compile Include="UI\SqlEditor.cs" />
     <Compile Include="Sqlite\SqliteColumnsFolderFeature.cs" />
     <Compile Include="Internal\State\IStateProvider.cs" />
+    <Compile Include="UI\MainMenu.cs" />
+    <Compile Include="Api\DbServerConnectionEventArgs.cs" />
+    <Compile Include="ApplicationState.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="gtk-sharp, Version=3.0.0.0, Culture=neutral, PublicKeyToken=35e10195dab3c99f">

@@ -2,7 +2,7 @@
 using GtkTestProject.Sqlite;
 using System.IO;
 
-namespace Gtk3TestProject
+namespace DbUtils
 {
 	public class SqliteColumnFeature : SqliteFeature
 	{

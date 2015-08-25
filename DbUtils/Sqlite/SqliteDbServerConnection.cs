@@ -3,7 +3,7 @@ using GtkTestProject.Api;
 using GtkTestProject.Sqlite;
 using System.IO;
 using Mono.Data.Sqlite;
-using Gtk3TestProject;
+using DbUtils;
 using System.Data;
 using System.Collections;
 using System.Collections.Generic;
@@ -15,16 +15,12 @@ namespace GtkTestProject
 	{
 
 		private string sqliteConnectionString;
-		private SqliteConnection con;
 
 
 		public SqliteDbServerConnection (string sqliteDatabaseFileName, String connectionString)
 		{
 			sqliteConnectionString = connectionString;
 			this.Name = new FileInfo (sqliteDatabaseFileName).Name;
-
-			con = new SqliteConnection (sqliteConnectionString);
-			con.Open ();
 		}
 
 		#region IDbServerConnection implementation
@@ -36,34 +32,42 @@ namespace GtkTestProject
 
 		public IFeature[] GetFeatures (IFeature parentFeature)
 		{
-			if (parentFeature == null) {
-				// root
-				return new SqliteFeature[] {
-					new SqliteFeature ("filename", this.Name, String.Format ("Resources{0}Icons{0}database.png", Path.DirectorySeparatorChar))
-				};
-			} else if (((SqliteFeature)parentFeature).Key == "tables") {
-				return loadTables ();
+			using (SqliteConnection con = new SqliteConnection (sqliteConnectionString)) {
+				con.Open ();
+			
+				if (parentFeature == null) {
+					// root
+					return new SqliteFeature[] {
+						new SqliteFeature ("filename", this.Name, String.Format ("Resources{0}Icons{0}database.png", Path.DirectorySeparatorChar))
+					};
+				} else if (((SqliteFeature)parentFeature).Key == "tables") {
+					return loadTables (con);
 
-			} else if (((SqliteFeature)parentFeature).Key == "table") {
-				return new IFeature[] { 
-					new SqliteColumnsFolderFeature (((SqliteTableFeature)parentFeature).Text)
-				};
-			} else if (((SqliteFeature)parentFeature).Key == "columns") {
-				return loadColumns (((SqliteColumnsFolderFeature)parentFeature).TableName);
-			} else if (((SqliteFeature)parentFeature).Key == "filename") {
-				return new SqliteFeature[] {
-					new SqliteFeature ("tables", "Tables"),
-					new SqliteFeature ("views", "Views"),
-					new SqliteFeature ("system", "System Catalogue")
-				};
-			} else {
-				return new SqliteFeature[0];
+				} else if (((SqliteFeature)parentFeature).Key == "table") {
+					return new IFeature[] { 
+						new SqliteColumnsFolderFeature (((SqliteTableFeature)parentFeature).Text)
+					};
+				} else if (((SqliteFeature)parentFeature).Key == "columns") {
+					return loadColumns (((SqliteColumnsFolderFeature)parentFeature).TableName, con);
+				} else if (((SqliteFeature)parentFeature).Key == "filename") {
+					return new SqliteFeature[] {
+						new SqliteFeature ("tables", "Tables"),
+						new SqliteFeature ("views", "Views"),
+						new SqliteFeature ("system", "System Catalogue")
+					};
+				} else {
+					return new SqliteFeature[0];
+				}
 			}
+		}
+
+		public IDbConnection CreateConnection() {
+			return new SqliteConnection (sqliteConnectionString);
 		}
 
 		#endregion
 
-		private SqliteTableFeature[] loadTables() {
+		private SqliteTableFeature[] loadTables(SqliteConnection con) {
 
 			List<string> tables = new List<string> ();
 
@@ -81,7 +85,7 @@ namespace GtkTestProject
 			return res.ToArray ();
 		}
 
-		private SqliteColumnFeature[] loadColumns(String table) {
+		private SqliteColumnFeature[] loadColumns(String table, SqliteConnection con) {
 			List<SqliteColumnFeature> columns = new List<SqliteColumnFeature> ();
 
 			using (IDbCommand command = con.CreateCommand ()) {
