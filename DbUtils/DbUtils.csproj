@@ -50,6 +50,7 @@
     <Compile Include="UI\MainMenu.cs" />
     <Compile Include="Api\DbServerConnectionEventArgs.cs" />
     <Compile Include="ApplicationState.cs" />
+    <Compile Include="Api\ColumnInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="gtk-sharp, Version=3.0.0.0, Culture=neutral, PublicKeyToken=35e10195dab3c99f">

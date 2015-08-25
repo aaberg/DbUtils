@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Data;
+using DbUtils;
+using System.Collections.Generic;
 
 namespace GtkTestProject.Api
 {
@@ -10,6 +12,8 @@ namespace GtkTestProject.Api
 		String Name {get;}
 
 		IDbConnection CreateConnection();
+
+		List<ColumnInfo> GetColumnInfosFromMeta (DataTable meta);
 	}
 }
 

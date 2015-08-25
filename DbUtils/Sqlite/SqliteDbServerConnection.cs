@@ -65,6 +65,10 @@ namespace GtkTestProject
 			return new SqliteConnection (sqliteConnectionString);
 		}
 
+		public List<ColumnInfo> GetColumnInfosFromMeta(DataTable meta) {
+			return meta.Select ().Select ((row) => new ColumnInfo( (String)row ["ColumnName"])).ToList (); 
+		}
+
 		#endregion
 
 		private SqliteTableFeature[] loadTables(SqliteConnection con) {
