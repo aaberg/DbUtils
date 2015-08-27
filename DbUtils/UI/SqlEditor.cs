@@ -6,6 +6,7 @@ using System.Linq;
 using System.Data;
 using Mono.Data.Sqlite;
 using System.Collections.Generic;
+using Mono.TextEditor.Highlighting;
 
 namespace DbUtils.UI
 {
@@ -46,17 +47,17 @@ namespace DbUtils.UI
 			}
 
 			String command;
-			if (this.sqlArea.Buffer.HasSelection) {
-				command = "";
+			if (string.IsNullOrWhiteSpace(sqlArea.SelectedText)) {
+				command = this.sqlArea.Text;
 			} else {
-				command = this.sqlArea.Buffer.Text;
+				command = this.sqlArea.SelectedText;
 			}
 
 			try {
 				using (IDbCommand cmd = Connection.CreateCommand ()) {
-					cmd.CommandText = command;
+					cmd.CommandText = command.Trim(' ', '\r', '\n');
 
-					if (command.ToLower().StartsWith("select")) {
+					if (cmd.CommandText.ToLower().StartsWith("select")) {
 						using (IDataReader reader = cmd.ExecuteReader ()) {
 							DataTable meta = reader.GetSchemaTable ();
 							ListStore ls = InitSqlResultGrid (meta);
@@ -65,7 +66,7 @@ namespace DbUtils.UI
 							while (reader.Read ()) {
 								object[] values = new object[numberOfCols];
 								reader.GetValues (values);
-								ls.AppendValues (	values);
+								ls.AppendValues ( values.Select((o) => o.ToString()).ToArray() );
 								rowCounter++;
 							}
 
@@ -94,12 +95,15 @@ namespace DbUtils.UI
 		private ListStore InitSqlResultGrid(DataTable meta) {
 
 			TreeView sqlResTreeView = new TreeView ();
+			sqlResTreeView.RulesHint = true;
 			List<Type> types = new List<Type> ();
 
 			for (int i = 0, maxCount = this.ServerConnection.GetColumnInfosFromMeta (meta).Count; i < maxCount; i++) {
 				var columnInfo = this.ServerConnection.GetColumnInfosFromMeta (meta) [i];
 
-				sqlResTreeView.AppendColumn (columnInfo.ColumnName, new CellRendererText (), "text", i);
+				TreeViewColumn tvc = new TreeViewColumn (columnInfo.ColumnName, new CellRendererText(), "text", i);
+				tvc.Resizable = true;
+				sqlResTreeView.AppendColumn (tvc);
 
 				types.Add (typeof(string));
 			}
@@ -120,7 +124,7 @@ namespace DbUtils.UI
 			
 		protected Gtk.VPaned vpaned;
 		protected Gtk.Toolbar toolbar;
-		protected Gtk.TextView sqlArea;
+		protected Mono.TextEditor.TextEditor sqlArea;
 		protected Gtk.Notebook resultNoteBook;
 		protected Gtk.ScrolledWindow sqlResultContainer;
 		protected Gtk.TextView outputView;
@@ -129,7 +133,7 @@ namespace DbUtils.UI
 
 			// toolbar
 			toolbar = new Toolbar();
-			toolbar.MarginLeft = 10;
+//			toolbar.MarginLeft = 10;
 			this.Add (toolbar);
 			var toolbarBox = (Gtk.Box.BoxChild)this [toolbar];
 			toolbarBox.Fill = false;
@@ -150,12 +154,17 @@ namespace DbUtils.UI
 			// vpaned
 			vpaned = new VPaned();
 			this.Add (vpaned);
-
-			// Sql area textbox
-			sqlArea = new TextView ();
+				
+			// Sql area textbox wrapped in a scrolled window
+			ScrolledWindow sqlAreaScroll = new ScrolledWindow();
+			vpaned.Add1 (sqlAreaScroll);
+			sqlArea = new Mono.TextEditor.TextEditor();
+			sqlArea.Text = string.Format ("{0}{0}", System.Environment.NewLine);
+			sqlArea.SetCaretTo (1, 1);
 			sqlArea.CanFocus = true;
-			sqlArea.Margin = 10;
-			vpaned.Add1 (sqlArea);
+			sqlArea.IsFocus = true;
+
+			sqlAreaScroll.Add (sqlArea);
 
 			// result tabs
 			resultNoteBook = new Notebook ();

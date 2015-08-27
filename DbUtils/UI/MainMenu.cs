@@ -21,7 +21,7 @@ namespace DbUtils.UI
 		protected Gtk.Menu databaseMenu;
 		protected Gtk.MenuItem newSqliteDbMenuItem;
 		protected Gtk.MenuItem openSqliteDbMenuItem;
-		protected Gtk.Notebook tabbedArea;
+//		protected Gtk.Notebook tabbedArea;
 
 		public event EventHandler NewSqliteDbActivated;
 		public event EventHandler OpenSqliteDbActivated;

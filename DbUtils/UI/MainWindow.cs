@@ -61,9 +61,7 @@ namespace DbUtils.UI
 			foreach (IFeature feature in features) {
 				TreeIter iter;
 				Gdk.Pixbuf icon = string.IsNullOrEmpty( feature.Icon ) ? new Gdk.Pixbuf(string.Format("Resources{0}Icons{0}folder.png", System.IO.Path.DirectorySeparatorChar)) : new Gdk.Pixbuf (feature.Icon);
-				icon.Save ("/home/lars/temp/test.png", "png");
 				if (parentIter.HasValue) {
-					Console.WriteLine (feature.Text);
 					iter = objectBrowserTreeStore.AppendValues (parentIter.Value, icon, feature.Text);
 				} else {
 					iter = objectBrowserTreeStore.AppendValues (icon, feature.Text);
@@ -89,9 +87,27 @@ namespace DbUtils.UI
 		}
 
 		protected void OnNewSqlTab(object sender, EventArgs e) {
-			SqlEditor sqlEditor = new SqlEditor (ApplicationState.Instance.Connections[0]);
-			tabbedArea.Add (sqlEditor);
-			tabbedArea.SetTabLabelText (sqlEditor, "Sql editor");
+			var con = ApplicationState.Instance.Connections [0];
+			SqlEditor sqlEditor = new SqlEditor (con);
+//			tabbedArea.Add (sqlEditor);
+//			tabbedArea.SetTabLabelText (sqlEditor, "Sql editor");
+
+			var tabLabel = new TabLabel ("Sql window - " + con.Name);
+			tabbedArea.AppendPage (sqlEditor, tabLabel);
+
+			tabLabel.CloseClicked += (closedSender, closedEventArgs) => {
+				tabbedArea.RemovePage(tabbedArea.PageNum(sqlEditor));
+			};
+
+
+//			HBox tabLabelBox = new HBox ();
+//			tabLabelBox.Add (new Label ("Sql editor"));
+//			Button btn = new Button ();
+//			btn.Label = "close";
+//			tabLabelBox.Add (btn);
+////			tabbedArea.setla
+//			tabbedArea.SetTabLabel (sqlEditor, new Label("test"));
+//
 			tabbedArea.ShowAll ();
 		}
 
