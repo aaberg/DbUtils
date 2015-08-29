@@ -1,0 +1,62 @@
+﻿<!-- Sqlite Syntax Mode -->
+ 
+<SyntaxMode name = "SQLite" mimeTypes="text/x-sql">
+	
+	<Property name="LineComment">--</Property>
+	<Property name="BlockCommentStart">/*</Property>
+	<Property name="BlockCommentEnd">*/</Property>
+	<Property name="StringQuote">'</Property>
+	
+	<EolSpan color = "Comment(Line)" rule="Comment">//</EolSpan>
+	<Span color = "Comment(Line)" rule="Comment">
+		<Begin>/*</Begin>
+		<End>*/</End>
+	</Span>
+
+	<Span color = "String" stopateol = "true" escape="&apos;">
+		<Begin>&apos;</Begin>
+		<End>&apos;</End>
+	</Span>
+	
+	<Match color = "String">CSharpNumber</Match>
+	
+	<Keywords color = "Keyword(Type)">
+		<Word>select</Word>
+		<Word>from</Word>
+		<Word>where</Word>
+		<Word>and</Word>
+		<Word>inner</Word>
+		<Word>outer</Word>
+		<Word>join</Word>
+		<Word>short</Word>
+		
+		<Word>object</Word>
+	</Keywords>
+
+	<Rule name = "Comment">
+		<Keywords color="Comment Tag" ignorecase="True">
+			<Word>TODO</Word>
+			<Word>FIXME</Word>
+			<Word>HACK</Word>
+			<Word>UNDONE</Word>
+		</Keywords>	
+		<Keywords color="Comment Tag" ignorecase="True">
+			<Word>@author</Word>
+			<Word>@deprecated</Word>
+			<Word>@return</Word>
+			<Word>@exception</Word>
+			<Word>@throws</Word>
+			<Word>@see</Word>
+			<Word>@since</Word>
+			<Word>@serial</Word>
+			<Word>@serialField</Word>
+			<Word>@serialData</Word>
+			<Word>@param</Word>
+			<Word>@version</Word>
+		</Keywords>	
+	</Rule>
+	
+	<Rule name = "String">
+	</Rule>
+	
+</SyntaxMode>

@@ -7,6 +7,7 @@ using System.Data;
 using Mono.Data.Sqlite;
 using System.Collections.Generic;
 using Mono.TextEditor.Highlighting;
+using System.Reflection;
 
 namespace DbUtils.UI
 {
@@ -118,6 +119,11 @@ namespace DbUtils.UI
 			return ls;
 		}
 
+		private SyntaxMode loadSyntaxMode() {
+			var syntaxModeStream = Assembly.GetExecutingAssembly ().GetManifestResourceStream ("DbUtils.UI.SyntaxModes.SqliteSyntaxMode.xml");
+			return SyntaxMode.Read (syntaxModeStream);
+		}
+
 
 		# region UI stuff
 		 
@@ -163,6 +169,9 @@ namespace DbUtils.UI
 			sqlArea.SetCaretTo (1, 1);
 			sqlArea.CanFocus = true;
 			sqlArea.IsFocus = true;
+
+			var syntaxMode = loadSyntaxMode ();
+			sqlArea.Document.SyntaxMode = syntaxMode;
 
 			sqlAreaScroll.Add (sqlArea);
 

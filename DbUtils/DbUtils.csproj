@@ -92,6 +92,7 @@
     <Folder Include="Resources\" />
     <Folder Include="Internal\" />
     <Folder Include="Internal\State\" />
+    <Folder Include="UI\SyntaxModes\" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\Icons\database.png">
@@ -125,5 +126,8 @@
     <None Include="Resources\Icons\play-32.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="UI\SyntaxModes\SqliteSyntaxMode.xml" />
   </ItemGroup>
 </Project>
