@@ -32,25 +32,11 @@
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
     <Compile Include="Application.cs" />
-    <Compile Include="Api\ConnectionLoader.cs" />
-    <Compile Include="Api\IConnectionLoader.cs" />
-    <Compile Include="Api\IDbServerConnection.cs" />
-    <Compile Include="Api\IFeature.cs" />
-    <Compile Include="Sqlite\SqliteConnectionLoader.cs" />
-    <Compile Include="Sqlite\SqliteDbServerConnection.cs" />
-    <Compile Include="Sqlite\SqliteFeature.cs" />
     <Compile Include="UI\MainWindow.cs" />
-    <Compile Include="Sqlite\SqliteTableFeature.cs" />
-    <Compile Include="Sqlite\SqliteColumnFeature.cs">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Compile>
     <Compile Include="UI\SqlEditor.cs" />
-    <Compile Include="Sqlite\SqliteColumnsFolderFeature.cs" />
     <Compile Include="Internal\State\IStateProvider.cs" />
     <Compile Include="UI\MainMenu.cs" />
-    <Compile Include="Api\DbServerConnectionEventArgs.cs" />
     <Compile Include="ApplicationState.cs" />
-    <Compile Include="Api\ColumnInfo.cs" />
     <Compile Include="UI\TabLabel.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -61,10 +47,6 @@
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Core" />
     <Reference Include="Mono.TextEditor, Version=1.0.0.0, Culture=neutral">
-      <Package>monodevelop</Package>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="ICSharpCode.NRefactory, Version=5.0.0.0, Culture=neutral, PublicKeyToken=d4bfe873e7598c49">
       <Package>monodevelop</Package>
       <Private>True</Private>
     </Reference>
@@ -86,6 +68,9 @@
     </Reference>
     <Reference Include="pango-sharp, Version=2.12.0.0, Culture=neutral, PublicKeyToken=35e10195dab3c99f">
       <Package>gtk-sharp-2.0</Package>
+    </Reference>
+    <Reference Include="ICSharpCode.NRefactory, Version=5.0.0.0, Culture=neutral, PublicKeyToken=d4bfe873e7598c49">
+      <Package>monodevelop</Package>
     </Reference>
   </ItemGroup>
   <ItemGroup>
@@ -129,5 +114,15 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="UI\SyntaxModes\SqliteSyntaxMode.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\DbUtils.Core\DbUtils.Core.csproj">
+      <Project>{ABE11A1E-3B40-4365-B6F3-27D35EFA4E68}</Project>
+      <Name>DbUtils.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\DbUtils.Sqlite\DbUtils.Sqlite.csproj">
+      <Project>{88500468-5F96-4AA3-91BB-3411F7C4448A}</Project>
+      <Name>DbUtils.Sqlite</Name>
+    </ProjectReference>
   </ItemGroup>
 </Project>

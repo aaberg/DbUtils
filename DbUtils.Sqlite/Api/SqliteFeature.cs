@@ -1,7 +1,7 @@
 ﻿using System;
-using GtkTestProject.Api;
+using DbUtils.Api;
 
-namespace GtkTestProject.Sqlite
+namespace DbUtils.Sqlite.Api
 {
 	public class SqliteFeature : IFeature
 	{

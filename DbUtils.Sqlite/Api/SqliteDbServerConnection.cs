@@ -1,6 +1,6 @@
 ﻿using System;
-using GtkTestProject.Api;
-using GtkTestProject.Sqlite;
+using DbUtils.Api;
+using DbUtils.Sqlite;
 using System.IO;
 using Mono.Data.Sqlite;
 using DbUtils;
@@ -9,7 +9,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace GtkTestProject
+namespace DbUtils.Sqlite.Api
 {
 	public class SqliteDbServerConnection : IDbServerConnection
 	{

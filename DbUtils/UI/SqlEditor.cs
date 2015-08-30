@@ -1,6 +1,6 @@
 ﻿using System;
 using Gtk;
-using GtkTestProject.Api;
+using DbUtils.Api;
 using DbUtils;
 using System.Linq;
 using System.Data;
@@ -188,7 +188,7 @@ namespace DbUtils.UI
 
 			vpaned.Add2 (resultNoteBook);
 
-			vpaned.Position = 300;
+			vpaned.Position = 180;
 		}
 
 		#endregion

@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace GtkTestProject.Api
+namespace DbUtils.Api
 {
 	public interface IFeature
 	{

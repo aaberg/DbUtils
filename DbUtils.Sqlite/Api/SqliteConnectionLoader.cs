@@ -1,9 +1,9 @@
 ﻿using System;
 using Gtk;
-using GtkTestProject.Api;
+using DbUtils.Api;
 using Mono.Data.Sqlite;
 
-namespace GtkTestProject
+namespace DbUtils.Sqlite.Api
 {
 	public class SqliteConnectionLoader : IConnectionLoader
 	{
@@ -15,7 +15,7 @@ namespace GtkTestProject
 
 		#region IConnectionLoader implementation
 
-		public GtkTestProject.Api.IDbServerConnection getConnection (Window parentWindow)
+		public DbUtils.Api.IDbServerConnection getConnection (Window parentWindow)
 		{
 			
 			FileChooserDialog chooseFileDialog = new FileChooserDialog (

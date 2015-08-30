@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace GtkTestProject
+namespace DbUtils
 {
 	public class ConnectionLoader
 	{

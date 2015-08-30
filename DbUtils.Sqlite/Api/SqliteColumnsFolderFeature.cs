@@ -1,7 +1,7 @@
 ﻿using System;
-using GtkTestProject.Sqlite;
+using DbUtils.Sqlite;
 
-namespace DbUtils
+namespace DbUtils.Sqlite.Api
 {
 	public class SqliteColumnsFolderFeature : SqliteFeature
 	{

@@ -1,10 +1,10 @@
 ﻿using System;
 using Gtk;
-using GtkTestProject;
-using GtkTestProject.Api;
-using System.IO;
 using DbUtils;
+using DbUtils.Api;
+using System.IO;
 using System.Collections.Generic;
+using DbUtils.Sqlite.Api;
 
 namespace DbUtils.UI
 {
@@ -162,6 +162,7 @@ namespace DbUtils.UI
 			mainVbox.Add (leftPaned);
 			var objectBrowserScrolledWindow = new Gtk.ScrolledWindow ();
 			objectBrowserScrolledWindow.ShadowType = ShadowType.EtchedIn;
+			objectBrowserScrolledWindow.WidthRequest = 300;
 			leftPaned.Add1 (objectBrowserScrolledWindow);
 
 			objectBrowserTreeView = new TreeView ();
@@ -183,8 +184,6 @@ namespace DbUtils.UI
 			statusBarBox.Fill = false;
 
 			this.ShowAll (	);
-
-			leftPaned.Position = 400;
 
 			this.DeleteEvent += OnExit;
 		}

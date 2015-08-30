@@ -1,5 +1,5 @@
 ﻿using System;
-using GtkTestProject.Api;
+using DbUtils.Api;
 using DbUtils;
 
 namespace DbUtils

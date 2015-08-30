@@ -3,7 +3,7 @@ using System.Data;
 using DbUtils;
 using System.Collections.Generic;
 
-namespace GtkTestProject.Api
+namespace DbUtils.Api
 {
 	public interface IDbServerConnection
 	{

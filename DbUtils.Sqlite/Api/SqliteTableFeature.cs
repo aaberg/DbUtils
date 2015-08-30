@@ -1,9 +1,9 @@
 ﻿using System;
-using GtkTestProject.Sqlite;
-using GtkTestProject.Api;
+using DbUtils.Sqlite;
+using DbUtils.Api;
 using System.IO;
 
-namespace DbUtils
+namespace DbUtils.Sqlite.Api
 {
 	public class SqliteTableFeature : SqliteFeature
 	{

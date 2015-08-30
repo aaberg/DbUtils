@@ -1,8 +1,8 @@
 ﻿using System;
-using GtkTestProject.Sqlite;
+using DbUtils.Sqlite;
 using System.IO;
 
-namespace DbUtils
+namespace DbUtils.Sqlite.Api
 {
 	public class SqliteColumnFeature : SqliteFeature
 	{

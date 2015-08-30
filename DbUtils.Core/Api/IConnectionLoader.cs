@@ -1,7 +1,7 @@
 ﻿using System;
-using GtkTestProject.Api;
+using DbUtils.Api;
 
-namespace GtkTestProject
+namespace DbUtils
 {
 	public interface IConnectionLoader
 	{

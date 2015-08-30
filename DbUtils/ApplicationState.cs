@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.ObjectModel;
-using GtkTestProject.Api;
+using DbUtils.Api;
 
 namespace DbUtils
 {
