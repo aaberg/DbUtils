@@ -1,6 +1,6 @@
 ﻿using System;
 using Gtk;
-using DbUtils.Api;
+using DbUtils.Core.Api;
 using DbUtils;
 using System.Linq;
 using System.Data;

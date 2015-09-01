@@ -1,5 +1,5 @@
 ﻿using System;
-using DbUtils.Api;
+using DbUtils.Core.Api;
 
 namespace DbUtils.Sqlite.Api
 {

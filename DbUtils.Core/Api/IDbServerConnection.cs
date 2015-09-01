@@ -3,7 +3,7 @@ using System.Data;
 using DbUtils;
 using System.Collections.Generic;
 
-namespace DbUtils.Api
+namespace DbUtils.Core.Api
 {
 	public interface IDbServerConnection
 	{

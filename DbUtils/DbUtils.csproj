@@ -71,7 +71,9 @@
     </Reference>
     <Reference Include="ICSharpCode.NRefactory, Version=5.0.0.0, Culture=neutral, PublicKeyToken=d4bfe873e7598c49">
       <Package>monodevelop</Package>
+      <Private>True</Private>
     </Reference>
+    <Reference Include="System.Runtime.Serialization" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Resources\" />

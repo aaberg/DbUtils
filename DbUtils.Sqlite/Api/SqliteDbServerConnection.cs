@@ -1,5 +1,5 @@
 ﻿using System;
-using DbUtils.Api;
+using DbUtils.Core.Api;
 using DbUtils.Sqlite;
 using System.IO;
 using Mono.Data.Sqlite;
@@ -66,7 +66,13 @@ namespace DbUtils.Sqlite.Api
 		}
 
 		public List<ColumnInfo> GetColumnInfosFromMeta(DataTable meta) {
-			return meta.Select ().Select ((row) => new ColumnInfo( (String)row ["ColumnName"])).ToList (); 
+			return meta.Select ().Select ((row) => new ColumnInfo (
+				(string)row ["ColumnName"], 
+				(string)row ["DataTypeName"],
+				!(bool)row ["AllowDbNull"],
+				(int)row ["ColumnSize"])
+			).ToList ();
+
 		}
 
 		#endregion

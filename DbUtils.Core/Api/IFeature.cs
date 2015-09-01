@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace DbUtils.Api
+namespace DbUtils.Core.Api
 {
 	public interface IFeature
 	{

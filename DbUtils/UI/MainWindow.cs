@@ -1,7 +1,7 @@
 ﻿using System;
 using Gtk;
 using DbUtils;
-using DbUtils.Api;
+using DbUtils.Core.Api;
 using System.IO;
 using System.Collections.Generic;
 using DbUtils.Sqlite.Api;

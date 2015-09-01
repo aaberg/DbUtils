@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace DbUtils
+namespace DbUtils.Core.Api
 {
 	public class ConnectionLoader
 	{

@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.ObjectModel;
-using DbUtils.Api;
+using DbUtils.Core.Api;
 
 namespace DbUtils
 {

@@ -1,6 +1,6 @@
 ﻿using System;
 using DbUtils.Sqlite;
-using DbUtils.Api;
+using DbUtils.Core.Api;
 using System.IO;
 
 namespace DbUtils.Sqlite.Api

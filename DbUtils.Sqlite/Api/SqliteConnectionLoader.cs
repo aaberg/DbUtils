@@ -1,6 +1,6 @@
 ﻿using System;
 using Gtk;
-using DbUtils.Api;
+using DbUtils.Core.Api;
 using Mono.Data.Sqlite;
 
 namespace DbUtils.Sqlite.Api
@@ -15,7 +15,7 @@ namespace DbUtils.Sqlite.Api
 
 		#region IConnectionLoader implementation
 
-		public DbUtils.Api.IDbServerConnection getConnection (Window parentWindow)
+		public IDbServerConnection getConnection (Window parentWindow)
 		{
 			
 			FileChooserDialog chooseFileDialog = new FileChooserDialog (

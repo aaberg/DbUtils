@@ -1,7 +1,7 @@
 ﻿using System;
-using DbUtils.Api;
+using DbUtils.Core.Api;
 
-namespace DbUtils
+namespace DbUtils.Core.Api
 {
 	public interface IConnectionLoader
 	{
