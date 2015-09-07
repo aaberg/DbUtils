@@ -41,6 +41,7 @@
     <Reference Include="glib-sharp, Version=2.12.0.0, Culture=neutral, PublicKeyToken=35e10195dab3c99f">
       <Package>glib-sharp-2.0</Package>
     </Reference>
+    <Reference Include="Mono.Data.Sqlite" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="MyClass.cs" />
@@ -51,10 +52,14 @@
     <Compile Include="Api\IDbServerConnection.cs" />
     <Compile Include="Api\IFeature.cs" />
     <Compile Include="Ddl\ITableDdlProvider.cs" />
+    <Compile Include="State\ISessionStateProvider.cs" />
+    <Compile Include="State\IStatePersistanceProvider.cs" />
+    <Compile Include="State\SqliteStatePersistanceProvider.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
     <Folder Include="Api\" />
     <Folder Include="Ddl\" />
+    <Folder Include="State\" />
   </ItemGroup>
 </Project>

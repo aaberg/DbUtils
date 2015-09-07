@@ -32,6 +32,7 @@
     <Reference Include="nunit.framework">
       <HintPath>..\packages\NUnit.2.6.4\lib\nunit.framework.dll</HintPath>
     </Reference>
+    <Reference Include="Mono.Data.Sqlite" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Test.cs" />
@@ -44,6 +45,10 @@
     <ProjectReference Include="..\DbUtils.Core\DbUtils.Core.csproj">
       <Project>{ABE11A1E-3B40-4365-B6F3-27D35EFA4E68}</Project>
       <Name>DbUtils.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\DbUtils.Sqlite\DbUtils.Sqlite.csproj">
+      <Project>{88500468-5F96-4AA3-91BB-3411F7C4448A}</Project>
+      <Name>DbUtils.Sqlite</Name>
     </ProjectReference>
   </ItemGroup>
 </Project>

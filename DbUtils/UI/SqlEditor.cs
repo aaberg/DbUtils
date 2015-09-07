@@ -4,7 +4,6 @@ using DbUtils.Core.Api;
 using DbUtils;
 using System.Linq;
 using System.Data;
-using Mono.Data.Sqlite;
 using System.Collections.Generic;
 using Mono.TextEditor.Highlighting;
 using System.Reflection;

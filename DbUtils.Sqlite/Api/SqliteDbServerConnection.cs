@@ -8,18 +8,15 @@ using System.Data;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using DbUtils.Core.State;
 
 namespace DbUtils.Sqlite.Api
 {
 	public class SqliteDbServerConnection : IDbServerConnection
 	{
-
-		private string sqliteConnectionString;
-
-
 		public SqliteDbServerConnection (string sqliteDatabaseFileName, String connectionString)
 		{
-			sqliteConnectionString = connectionString;
+			this.SqliteConnectionString = connectionString;
 			this.Name = new FileInfo (sqliteDatabaseFileName).Name;
 		}
 
@@ -30,9 +27,14 @@ namespace DbUtils.Sqlite.Api
 			private set;
 		}
 
+		public string SqliteConnectionString  {
+			get;
+			private set;
+		}
+
 		public IFeature[] GetFeatures (IFeature parentFeature)
 		{
-			using (SqliteConnection con = new SqliteConnection (sqliteConnectionString)) {
+			using (SqliteConnection con = new SqliteConnection (SqliteConnectionString)) {
 				con.Open ();
 			
 				if (parentFeature == null) {
@@ -62,7 +64,7 @@ namespace DbUtils.Sqlite.Api
 		}
 
 		public IDbConnection CreateConnection() {
-			return new SqliteConnection (sqliteConnectionString);
+			return new SqliteConnection (SqliteConnectionString);
 		}
 
 		public List<ColumnInfo> GetColumnInfosFromMeta(DataTable meta) {
@@ -73,6 +75,16 @@ namespace DbUtils.Sqlite.Api
 				(int)row ["ColumnSize"])
 			).ToList ();
 
+		}
+
+		private ISessionStateProvider _sessionStateProvider = null;
+		public DbUtils.Core.State.ISessionStateProvider SessionStateProvider {
+			get {
+				if (_sessionStateProvider == null) {
+					_sessionStateProvider = new SqliteSessionStateProvider (this);
+				}
+				return _sessionStateProvider;
+			}
 		}
 
 		#endregion

@@ -34,13 +34,12 @@
     <Compile Include="Application.cs" />
     <Compile Include="UI\MainWindow.cs" />
     <Compile Include="UI\SqlEditor.cs" />
-    <Compile Include="Internal\State\IStateProvider.cs" />
     <Compile Include="UI\MainMenu.cs" />
     <Compile Include="ApplicationState.cs" />
     <Compile Include="UI\TabLabel.cs" />
+    <Compile Include="Internal\State\State.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Reference Include="Mono.Data.Sqlite" />
     <Reference Include="System.Data" />
     <Reference Include="System" />
     <Reference Include="System.Xml" />

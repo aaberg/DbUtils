@@ -5,6 +5,7 @@ using DbUtils.Core.Api;
 using System.IO;
 using System.Collections.Generic;
 using DbUtils.Sqlite.Api;
+using System.Linq;
 
 namespace DbUtils.UI
 {
@@ -16,10 +17,18 @@ namespace DbUtils.UI
 			this.Build ();
 
 			InitObjectBrowser ();
+
+			var sessions = ApplicationState.Instance.StatePersistanceProvider.RestoreSessions ();
+			sessions.ToList ().ForEach ((s) => loadConnection (s));
 		}
 			
 		protected void OnExit(object sender, EventArgs e) {
+			saveState ();
 			Gtk.Application.Quit ();
+		}
+
+		private void saveState() {
+			ApplicationState.Instance.StatePersistanceProvider.SaveSessions (ApplicationState.Instance.Connections.ToArray());
 		}
 
 		private void InitObjectBrowser() {

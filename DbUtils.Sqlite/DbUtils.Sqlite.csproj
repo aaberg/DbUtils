@@ -54,10 +54,12 @@
     <Compile Include="Api\SqliteDbServerConnection.cs" />
     <Compile Include="Api\SqliteFeature.cs" />
     <Compile Include="Api\SqliteTableFeature.cs" />
+    <Compile Include="State\SqliteSessionStateProvider.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
     <Folder Include="Api\" />
+    <Folder Include="State\" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\DbUtils.Core\DbUtils.Core.csproj">

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.ObjectModel;
 using DbUtils.Core.Api;
+using DbUtils.Core.State;
 
 namespace DbUtils
 {
@@ -8,6 +9,8 @@ namespace DbUtils
 	{
 		public ApplicationState ()
 		{
+			this.StatePersistanceProvider = new SqliteStatePersistanceProvider ();
+			
 			_instance = this;
 		}
 
@@ -29,6 +32,12 @@ namespace DbUtils
 					CurrentConnectionChanged (null, new DbServerConnectionEventArgs (value));
 				}
 			}
+		}
+
+
+		public IStatePersistanceProvider StatePersistanceProvider {
+			get;
+			private set;
 		}
 
 

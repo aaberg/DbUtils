@@ -2,6 +2,7 @@
 using System.Data;
 using DbUtils;
 using System.Collections.Generic;
+using DbUtils.Core.State;
 
 namespace DbUtils.Core.Api
 {
@@ -14,6 +15,8 @@ namespace DbUtils.Core.Api
 		IDbConnection CreateConnection();
 
 		List<ColumnInfo> GetColumnInfosFromMeta (DataTable meta);
+
+		ISessionStateProvider SessionStateProvider {get;}
 	}
 }
 
