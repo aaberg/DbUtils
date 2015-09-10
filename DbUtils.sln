@@ -11,6 +11,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DbUtils.Core.Tests", "DbUti
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DbUtils.Sqlite.Tests", "DbUtils.Sqlite.Tests\DbUtils.Sqlite.Tests.csproj", "{DF2D59C6-D736-4031-B4B7-C6AE0590D826}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DbUtils.Tests", "DbUtils.Tests\DbUtils.Tests.csproj", "{97D18435-39C3-4650-AF90-8830E7C22A63}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x86 = Debug|x86
@@ -21,6 +23,10 @@ Global
 		{88500468-5F96-4AA3-91BB-3411F7C4448A}.Debug|x86.Build.0 = Debug|Any CPU
 		{88500468-5F96-4AA3-91BB-3411F7C4448A}.Release|x86.ActiveCfg = Release|Any CPU
 		{88500468-5F96-4AA3-91BB-3411F7C4448A}.Release|x86.Build.0 = Release|Any CPU
+		{97D18435-39C3-4650-AF90-8830E7C22A63}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{97D18435-39C3-4650-AF90-8830E7C22A63}.Debug|x86.Build.0 = Debug|Any CPU
+		{97D18435-39C3-4650-AF90-8830E7C22A63}.Release|x86.ActiveCfg = Release|Any CPU
+		{97D18435-39C3-4650-AF90-8830E7C22A63}.Release|x86.Build.0 = Release|Any CPU
 		{A07E4328-2FB8-473D-9E68-CBDFB4651927}.Debug|x86.ActiveCfg = Debug|Any CPU
 		{A07E4328-2FB8-473D-9E68-CBDFB4651927}.Debug|x86.Build.0 = Debug|Any CPU
 		{A07E4328-2FB8-473D-9E68-CBDFB4651927}.Release|x86.ActiveCfg = Release|Any CPU

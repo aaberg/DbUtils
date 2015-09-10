@@ -13,6 +13,10 @@ namespace DbUtils.Sqlite
 			this.session = session;
 		}
 
+		public SqliteSessionStateProvider() {
+			
+		}
+
 		#region ISessionStateProvider implementation
 
 		public string getSerializedState ()

@@ -127,6 +127,18 @@ namespace DbUtils.Sqlite.Api
 			}
 			return columns.ToArray ();
 		}
+
+		public override bool Equals (object obj)
+		{
+			if (obj.GetType () != this.GetType ())
+				return false;
+
+			SqliteDbServerConnection other = (SqliteDbServerConnection)obj;
+
+			return 
+				this.Name == other.Name && 
+				this.SqliteConnectionString == other.SqliteConnectionString;
+		}
 	}
 }
 
