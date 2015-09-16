@@ -10,8 +10,14 @@ namespace DbUtils
 		public ApplicationState ()
 		{
 			this.StatePersistanceProvider = new SqliteStatePersistanceProvider ();
-			
+
 			_instance = this;
+
+			// Make sure the first connection that is loaded is set as default connection.
+			this.Connections.CollectionChanged += (sender, e) => {
+				if (this.CurrentConnection == null && this.Connections.Count > 0) 
+					this.CurrentConnection = this.Connections[0];
+			};
 		}
 
 		private ObservableCollection<IDbServerConnection> _connections = new ObservableCollection<IDbServerConnection> ();

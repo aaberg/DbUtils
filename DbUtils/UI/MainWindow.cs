@@ -42,7 +42,11 @@ namespace DbUtils.UI
 			obCol.PackStart (iconRendere, false);
 			obCol.AddAttribute (iconRendere, "pixbuf", 0);
 			obCol.PackStart (textRendere, true);		
-			obCol.AddAttribute (textRendere, "text", 1);
+
+			obCol.SetCellDataFunc (textRendere, new TreeCellDataFunc ((col, cell, model, iter) => {
+ 				var val = objectBrowserTreeStore.GetValue(iter, 1);
+				((CellRendererText)cell).Text = ((IFeature)val).Text;
+			}));
 
 			objectBrowserTreeView.AppendColumn (obCol);
 
@@ -61,7 +65,6 @@ namespace DbUtils.UI
 		private void loadConnection(IDbServerConnection con) {
 			loadConnectionRecursive (con, new Nullable<TreeIter>(), (IFeature)null);
 			ApplicationState.Instance.Connections.Add (con);
-			ApplicationState.Instance.CurrentConnection = con;
 		}
 
 		private void loadConnectionRecursive(IDbServerConnection con, Nullable<TreeIter> parentIter, IFeature parentFeature) {
@@ -71,9 +74,9 @@ namespace DbUtils.UI
 				TreeIter iter;
 				Gdk.Pixbuf icon = string.IsNullOrEmpty( feature.Icon ) ? new Gdk.Pixbuf(string.Format("Resources{0}Icons{0}folder.png", System.IO.Path.DirectorySeparatorChar)) : new Gdk.Pixbuf (feature.Icon);
 				if (parentIter.HasValue) {
-					iter = objectBrowserTreeStore.AppendValues (parentIter.Value, icon, feature.Text);
+					iter = objectBrowserTreeStore.AppendValues (parentIter.Value, icon, feature);
 				} else {
-					iter = objectBrowserTreeStore.AppendValues (icon, feature.Text);
+					iter = objectBrowserTreeStore.AppendValues (icon, feature);
 				}
 				loadConnectionRecursive (con, iter, feature);
 			}
@@ -98,8 +101,6 @@ namespace DbUtils.UI
 		protected void OnNewSqlTab(object sender, EventArgs e) {
 			var con = ApplicationState.Instance.Connections [0];
 			SqlEditor sqlEditor = new SqlEditor (con);
-//			tabbedArea.Add (sqlEditor);
-//			tabbedArea.SetTabLabelText (sqlEditor, "Sql editor");
 
 			var tabLabel = new TabLabel ("Sql window - " + con.Name);
 			tabbedArea.AppendPage (sqlEditor, tabLabel);
@@ -107,16 +108,7 @@ namespace DbUtils.UI
 			tabLabel.CloseClicked += (closedSender, closedEventArgs) => {
 				tabbedArea.RemovePage(tabbedArea.PageNum(sqlEditor));
 			};
-
-
-//			HBox tabLabelBox = new HBox ();
-//			tabLabelBox.Add (new Label ("Sql editor"));
-//			Button btn = new Button ();
-//			btn.Label = "close";
-//			tabLabelBox.Add (btn);
-////			tabbedArea.setla
-//			tabbedArea.SetTabLabel (sqlEditor, new Label("test"));
-//
+				
 			tabbedArea.ShowAll ();
 		}
 
@@ -129,11 +121,12 @@ namespace DbUtils.UI
 		protected Gtk.TreeView objectBrowserTreeView;
 		protected Gtk.TreeStore objectBrowserTreeStore;
 
-		protected Gtk.Button dummyButton;
-
 
 		// menu
 		protected MainMenu mainMenu;
+
+		// toolbar
+		protected MainToolbar toolbar;
 
 
 		protected Gtk.Notebook tabbedArea;
@@ -155,7 +148,7 @@ namespace DbUtils.UI
 
 			var mainMenuBox = (Gtk.Box.BoxChild)mainVbox [mainMenu];
 
-			mainMenuBox.Position = 0;
+//			mainMenuBox.Position = 0;
 			mainMenuBox.Expand = false;
 			mainMenuBox.Fill = false;
 
@@ -164,6 +157,11 @@ namespace DbUtils.UI
 			mainMenu.ExitActivated += OnExit;
 			mainMenu.NewSqlEditorWindowActivated += OnNewSqlTab;
 
+			// toolbar
+			toolbar = new MainToolbar();
+			mainVbox.Add (toolbar);
+			var toolbarBox = (Gtk.Box.BoxChild)mainVbox [toolbar];
+			toolbarBox.Expand = false;
 
 			// left paned
 			leftPaned = new Gtk.HPaned();
@@ -177,7 +175,7 @@ namespace DbUtils.UI
 			objectBrowserTreeView = new TreeView ();
 			objectBrowserScrolledWindow.Add (objectBrowserTreeView);
 
-			objectBrowserTreeStore = new TreeStore (typeof(Gdk.Pixbuf), typeof(string));
+			objectBrowserTreeStore = new TreeStore (typeof(Gdk.Pixbuf), typeof(IFeature));
 			objectBrowserTreeView.Model = objectBrowserTreeStore;
 
 			// main tabbed area
@@ -188,9 +186,12 @@ namespace DbUtils.UI
 			statusBar = new Statusbar();
 			mainVbox.Add (statusBar);
 			var statusBarBox = (Gtk.Box.BoxChild)mainVbox [statusBar];
-			statusBarBox.Position = 2;
 			statusBarBox.Expand = false;
 			statusBarBox.Fill = false;
+
+			global::Gtk.Label currentDbLabel = new Label ();
+			ApplicationState.Instance.CurrentConnectionChanged += (sender, e) => currentDbLabel.Text = e.DbServerConnection.Name;
+			statusBar.Add (currentDbLabel);
 
 			this.ShowAll (	);
 

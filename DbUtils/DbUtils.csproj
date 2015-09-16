@@ -38,6 +38,7 @@
     <Compile Include="ApplicationState.cs" />
     <Compile Include="UI\TabLabel.cs" />
     <Compile Include="Internal\State\State.cs" />
+    <Compile Include="UI\MainToolbar.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="System.Data" />
